@@ -38,8 +38,10 @@ const DataTable = () => {
       
       // In a real scenario, you would make an actual API call like:
       // await axios.post('/api/sites', editedData);
+
+      const updatedDate = new Date().toLocaleDateString();
       
-      const updatedSite = { ...site, ...editedData };
+      const updatedSite = { ...site, ...editedData, lastUpdated: updatedDate };
       
       // Update Redux store
       dispatch(updateSite(updatedSite));
@@ -191,21 +193,11 @@ const DataTable = () => {
     {
       accessorKey: 'lastUpdated',
       header: () => <span className="font-bold text-xs uppercase tracking-wider">Last Updated</span>,
-      cell: ({ row }) => {
-        const isEditing = editingId === row.original.id;
-        return isEditing ? (
-          <Input
-            type="date"
-            value={editedData.lastUpdated || row.original.lastUpdated}
-            onChange={(e) => setEditedData({ ...editedData, lastUpdated: e.target.value })}
-            className="h-9 border-2 border-primary"
-          />
-        ) : (
-          <span className="text-sm text-muted-foreground font-mono">
+      cell: ({ row }) => (
+        <span className="text-sm text-muted-foreground font-mono">
             {row.original.lastUpdated}
           </span>
-        );
-      },
+      ),
     },
     {
       id: 'actions',

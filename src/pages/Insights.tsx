@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 const Insights = () => {
   const insights = useSelector((state: RootState) => state.insights.insights);
 
+  console.log(insights);
+
   // Prepare data for line chart - comparing trends across multiple sites
   const lineChartOption = {
     title: {
