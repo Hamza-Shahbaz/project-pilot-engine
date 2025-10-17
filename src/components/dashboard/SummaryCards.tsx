@@ -40,20 +40,28 @@ const SummaryCards = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       {cards.map((card) => {
         const Icon = card.icon;
         return (
-          <Card key={card.title} className="hover:shadow-md transition-shadow">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
+          <Card 
+            key={card.title} 
+            className="relative overflow-hidden border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group"
+          >
+            <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <CardTitle className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
                 {card.title}
               </CardTitle>
-              <Icon className={`h-4 w-4 ${card.color}`} />
+              <div className={`p-2 rounded-lg bg-accent ${card.color} group-hover:scale-110 transition-transform`}>
+                <Icon className="h-5 w-5" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{card.value}</div>
+              <div className="text-4xl font-bold bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
+                {card.value}
+              </div>
             </CardContent>
+            <div className={`absolute bottom-0 left-0 h-1 w-full ${card.color} opacity-50`} />
           </Card>
         );
       })}

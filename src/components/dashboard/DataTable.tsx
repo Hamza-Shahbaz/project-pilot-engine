@@ -64,45 +64,57 @@ const DataTable = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-      Active: 'default',
-      Inactive: 'secondary',
-      Maintenance: 'outline',
+    const config: Record<string, { variant: "default" | "secondary" | "destructive" | "outline"; className: string }> = {
+      Active: { variant: 'default', className: 'bg-success text-success-foreground hover:bg-success/90' },
+      Inactive: { variant: 'secondary', className: 'bg-muted text-muted-foreground' },
+      Maintenance: { variant: 'outline', className: 'border-warning text-warning' },
     };
-    return <Badge variant={variants[status] || 'default'}>{status}</Badge>;
+    const statusConfig = config[status] || config.Active;
+    return (
+      <Badge variant={statusConfig.variant} className={statusConfig.className}>
+        {status}
+      </Badge>
+    );
   };
 
   const columns: ColumnDef<Site>[] = [
     {
       accessorKey: 'id',
-      header: 'ID',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">ID</span>,
+      cell: ({ row }) => (
+        <span className="font-mono text-muted-foreground bg-accent px-2 py-1 rounded text-xs">
+          #{row.original.id}
+        </span>
+      ),
     },
     {
       accessorKey: 'name',
-      header: 'Site Name',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Site Name</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
         return isEditing ? (
           <Input
             value={editedData.name || row.original.name}
             onChange={(e) => setEditedData({ ...editedData, name: e.target.value })}
-            className="h-8"
+            className="h-9 border-2 border-primary font-medium"
+            placeholder="Site name"
           />
         ) : (
-          row.original.name
+          <span className="font-semibold text-foreground">{row.original.name}</span>
         );
       },
     },
     {
       accessorKey: 'status',
-      header: 'Status',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Status</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
         return isEditing ? (
           <Input
             value={editedData.status || row.original.status}
             onChange={(e) => setEditedData({ ...editedData, status: e.target.value })}
-            className="h-8"
+            className="h-9 border-2 border-primary"
+            placeholder="Status"
           />
         ) : (
           getStatusBadge(row.original.status)
@@ -111,58 +123,74 @@ const DataTable = () => {
     },
     {
       accessorKey: 'alarms',
-      header: 'Alarms',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Alarms</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
+        const alarmCount = row.original.alarms;
         return isEditing ? (
           <Input
             type="number"
-            value={editedData.alarms ?? row.original.alarms}
+            value={editedData.alarms ?? alarmCount}
             onChange={(e) => setEditedData({ ...editedData, alarms: parseInt(e.target.value) })}
-            className="h-8 w-20"
+            className="h-9 w-24 border-2 border-destructive/50"
+            placeholder="0"
           />
         ) : (
-          row.original.alarms
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold ${
+            alarmCount > 0 ? 'bg-destructive/10 text-destructive' : 'bg-accent text-muted-foreground'
+          }`}>
+            {alarmCount}
+          </span>
         );
       },
     },
     {
       accessorKey: 'tickets',
-      header: 'Tickets',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Tickets</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
+        const ticketCount = row.original.tickets;
         return isEditing ? (
           <Input
             type="number"
-            value={editedData.tickets ?? row.original.tickets}
+            value={editedData.tickets ?? ticketCount}
             onChange={(e) => setEditedData({ ...editedData, tickets: parseInt(e.target.value) })}
-            className="h-8 w-20"
+            className="h-9 w-24 border-2 border-warning/50"
+            placeholder="0"
           />
         ) : (
-          row.original.tickets
+          <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold ${
+            ticketCount > 0 ? 'bg-warning/10 text-warning' : 'bg-accent text-muted-foreground'
+          }`}>
+            {ticketCount}
+          </span>
         );
       },
     },
     {
       accessorKey: 'devices',
-      header: 'Devices',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Devices</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
+        const deviceCount = row.original.devices;
         return isEditing ? (
           <Input
             type="number"
-            value={editedData.devices ?? row.original.devices}
+            value={editedData.devices ?? deviceCount}
             onChange={(e) => setEditedData({ ...editedData, devices: parseInt(e.target.value) })}
-            className="h-8 w-20"
+            className="h-9 w-24 border-2 border-info/50"
+            placeholder="0"
           />
         ) : (
-          row.original.devices
+          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-sm font-semibold bg-info/10 text-info">
+            {deviceCount}
+          </span>
         );
       },
     },
     {
       accessorKey: 'lastUpdated',
-      header: 'Last Updated',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Last Updated</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
         return isEditing ? (
@@ -170,16 +198,18 @@ const DataTable = () => {
             type="date"
             value={editedData.lastUpdated || row.original.lastUpdated}
             onChange={(e) => setEditedData({ ...editedData, lastUpdated: e.target.value })}
-            className="h-8"
+            className="h-9 border-2 border-primary"
           />
         ) : (
-          row.original.lastUpdated
+          <span className="text-sm text-muted-foreground font-mono">
+            {row.original.lastUpdated}
+          </span>
         );
       },
     },
     {
       id: 'actions',
-      header: 'Actions',
+      header: () => <span className="font-bold text-xs uppercase tracking-wider">Actions</span>,
       cell: ({ row }) => {
         const isEditing = editingId === row.original.id;
         return (
@@ -188,9 +218,9 @@ const DataTable = () => {
               <Button
                 size="sm"
                 onClick={() => handleSave(row.original)}
-                className="h-8"
+                className="h-9 bg-success hover:bg-success/90 text-success-foreground shadow-sm"
               >
-                <Save className="h-3 w-3 mr-1" />
+                <Save className="h-4 w-4 mr-1.5" />
                 Save
               </Button>
             ) : (
@@ -198,9 +228,9 @@ const DataTable = () => {
                 size="sm"
                 variant="outline"
                 onClick={() => handleEdit(row.original)}
-                className="h-8"
+                className="h-9 border-2 hover:border-primary hover:bg-primary/5"
               >
-                <Edit2 className="h-3 w-3 mr-1" />
+                <Edit2 className="h-4 w-4 mr-1.5" />
                 Edit
               </Button>
             )}
@@ -208,9 +238,9 @@ const DataTable = () => {
               size="sm"
               variant="secondary"
               onClick={() => handleInsights(row.original)}
-              className="h-8"
+              className="h-9 hover:bg-info/10 hover:text-info hover:border-info border-2"
             >
-              <BarChart2 className="h-3 w-3 mr-1" />
+              <BarChart2 className="h-4 w-4 mr-1.5" />
               Insights
             </Button>
           </div>
@@ -227,20 +257,23 @@ const DataTable = () => {
 
   return (
     <>
-      <Card>
-        <CardHeader>
-          <CardTitle>Sites Data</CardTitle>
+      <Card className="shadow-lg border-2">
+        <CardHeader className="bg-gradient-to-r from-accent to-accent/50 border-b-2">
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            Sites Data Management
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse">
               <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="border-b">
+                  <tr key={headerGroup.id} className="border-b-2 bg-muted/30">
                     {headerGroup.headers.map((header) => (
                       <th
                         key={header.id}
-                        className="text-left p-3 font-semibold text-sm text-muted-foreground"
+                        className="text-left p-4 text-foreground"
                       >
                         {flexRender(
                           header.column.columnDef.header,
@@ -252,10 +285,15 @@ const DataTable = () => {
                 ))}
               </thead>
               <tbody>
-                {table.getRowModel().rows.map((row) => (
-                  <tr key={row.id} className="border-b hover:bg-accent/50 transition-colors">
+                {table.getRowModel().rows.map((row, index) => (
+                  <tr 
+                    key={row.id} 
+                    className={`border-b transition-all duration-200 hover:bg-accent/30 ${
+                      editingId === row.original.id ? 'bg-primary/5 border-l-4 border-l-primary' : ''
+                    } ${index % 2 === 0 ? 'bg-background' : 'bg-muted/10'}`}
+                  >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="p-3 text-sm">
+                      <td key={cell.id} className="p-4 text-sm">
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()

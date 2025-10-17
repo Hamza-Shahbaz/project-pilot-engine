@@ -8,11 +8,11 @@ const Dashboard = () => {
   const uiSettings = useSelector((state: RootState) => state.uiSettings);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Monitor your sites and infrastructure</p>
+        <div className="space-y-1">
+          <h1 className="text-4xl font-bold text-foreground tracking-tight">Dashboard</h1>
+          <p className="text-muted-foreground text-lg">Monitor your sites and infrastructure in real-time</p>
         </div>
         <SettingsDrawer />
       </div>

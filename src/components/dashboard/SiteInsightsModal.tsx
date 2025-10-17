@@ -63,12 +63,15 @@ const SiteInsightsModal = ({ site, open, onClose }: SiteInsightsModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Site Insights - {site.name}</DialogTitle>
+      <DialogContent className="max-w-4xl border-2">
+        <DialogHeader className="pb-4 border-b-2">
+          <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            Site Insights - {site.name}
+          </DialogTitle>
         </DialogHeader>
-        <div className="mt-4">
-          <ReactECharts option={option} style={{ height: '400px' }} />
+        <div className="mt-6">
+          <ReactECharts option={option} style={{ height: '450px' }} />
         </div>
       </DialogContent>
     </Dialog>

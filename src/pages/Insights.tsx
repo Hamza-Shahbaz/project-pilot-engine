@@ -101,26 +101,32 @@ const Insights = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Insights</h1>
-        <p className="text-muted-foreground">Analyze multi-site performance and trends</p>
+    <div className="space-y-8">
+      <div className="space-y-1">
+        <h1 className="text-4xl font-bold text-foreground tracking-tight">Insights</h1>
+        <p className="text-muted-foreground text-lg">Analyze multi-site performance and trends</p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Trend Analysis</CardTitle>
+      <Card className="shadow-lg border-2">
+        <CardHeader className="bg-gradient-to-r from-accent to-accent/50 border-b-2">
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+            Trend Analysis
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <ReactECharts option={lineChartOption} style={{ height: '400px' }} />
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Activity Patterns</CardTitle>
+      <Card className="shadow-lg border-2">
+        <CardHeader className="bg-gradient-to-r from-accent to-accent/50 border-b-2">
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-info animate-pulse" />
+            Activity Patterns
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-6">
           <ReactECharts option={heatmapOption} style={{ height: '400px' }} />
         </CardContent>
       </Card>

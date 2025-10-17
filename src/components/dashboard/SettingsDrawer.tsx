@@ -36,40 +36,45 @@ const SettingsDrawer = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Settings className="h-4 w-4" />
+        <Button variant="outline" size="icon" className="border-2 hover:border-primary hover:bg-primary/5">
+          <Settings className="h-5 w-5" />
         </Button>
       </SheetTrigger>
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Dashboard Settings</SheetTitle>
-          <SheetDescription>
+      <SheetContent className="w-[400px]">
+        <SheetHeader className="space-y-3">
+          <SheetTitle className="text-2xl font-bold flex items-center gap-2">
+            <Settings className="h-6 w-6 text-primary" />
+            Dashboard Settings
+          </SheetTitle>
+          <SheetDescription className="text-base">
             Configure which components to display on the dashboard
           </SheetDescription>
         </SheetHeader>
-        <div className="mt-6 space-y-4">
-          <div className="flex items-center space-x-2">
+        <div className="mt-8 space-y-6">
+          <div className="flex items-center space-x-3 p-4 rounded-lg border-2 hover:border-primary/50 transition-colors bg-accent/30">
             <Checkbox
               id="summaryCards"
               checked={uiSettings.showSummaryCards}
               onCheckedChange={handleToggleSummaryCards}
+              className="h-5 w-5"
             />
             <label
               htmlFor="summaryCards"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-base font-semibold leading-none cursor-pointer flex-1"
             >
               Show Summary Cards
             </label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 p-4 rounded-lg border-2 hover:border-primary/50 transition-colors bg-accent/30">
             <Checkbox
               id="dataTable"
               checked={uiSettings.showDataTable}
               onCheckedChange={handleToggleDataTable}
+              className="h-5 w-5"
             />
             <label
               htmlFor="dataTable"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-base font-semibold leading-none cursor-pointer flex-1"
             >
               Show Data Table
             </label>
