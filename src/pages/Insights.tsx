@@ -2,11 +2,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import ReactECharts from 'echarts-for-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
 
 const Insights = () => {
   const insights = useSelector((state: RootState) => state.insights.insights);
-
-  console.log(insights);
+  const [selectedSiteId, setSelectedSiteId] = useState<number>(insights[0]?.siteId || 1);
 
   // Prepare data for line chart - comparing trends across multiple sites
   const lineChartOption = {
@@ -47,6 +48,7 @@ const Insights = () => {
   };
 
   // Prepare data for heatmap
+  const selectedSite = insights.find(site => site.siteId === selectedSiteId);
   const heatmapOption = {
     title: {
       text: 'Activity Heatmap',
@@ -88,7 +90,7 @@ const Insights = () => {
       {
         name: 'Activity',
         type: 'heatmap',
-        data: insights.length > 0 ? insights[0].heatmapData : [],
+        data: selectedSite?.heatmapData || [],
         label: {
           show: true,
         },
@@ -123,10 +125,24 @@ const Insights = () => {
 
       <Card className="shadow-lg border-2">
         <CardHeader className="bg-gradient-to-r from-accent to-accent/50 border-b-2">
-          <CardTitle className="text-xl font-bold flex items-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-info animate-pulse" />
-            Activity Patterns
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-xl font-bold flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-info animate-pulse" />
+              Activity Patterns
+            </CardTitle>
+            <Select value={selectedSiteId.toString()} onValueChange={(value) => setSelectedSiteId(Number(value))}>
+              <SelectTrigger className="w-[200px] bg-background/80 backdrop-blur-sm border-2">
+                <SelectValue placeholder="Select site" />
+              </SelectTrigger>
+              <SelectContent className="bg-background border-2 z-50">
+                {insights.map((site) => (
+                  <SelectItem key={site.siteId} value={site.siteId.toString()}>
+                    {site.siteName}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
         <CardContent className="pt-6">
           <ReactECharts option={heatmapOption} style={{ height: '400px' }} />
