@@ -63,14 +63,14 @@ const Insights = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['Monday', 'Tuesday', 'Wednesday'],
+      data: ['Monday', 'Tuesday'],
       splitArea: {
         show: true,
       },
     },
     yAxis: {
       type: 'category',
-      data: ['Morning', 'Evening'],
+      data: ['Morning', 'Evening', 'Night'],
       splitArea: {
         show: true,
       },
